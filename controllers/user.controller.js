@@ -25,7 +25,7 @@ function create(req, res, next) {
                 return user.save()
             }
     }).then(function (savedUser) {
-        var token = jwt.sign(savedUser._id, config.jwtSecretKey, {
+        var token = jwt.sign({ userId: savedUser._id }, config.jwtSecretKey, {
             expiresIn: config.jwtExpiresIn
         });
         return res.json({ message: "User successfully registered.", token: token });
@@ -35,7 +35,7 @@ function create(req, res, next) {
 }
 
 function getAllUser(req, res) {
-    User.find()
+    User.find({}, {firstName: 1, lastName: 1, emailId: 1})
         .then(function (users) {
             return res.json(users);
         })
@@ -55,7 +55,7 @@ function userLogin(req, res) {
     User.getByEmailId(req.body.emailId).then(function (user) {
         if(passwordHash.verify(req.body.password, user.password)) {
             console.log("valid password");
-            var token = jwt.sign(user._id, config.jwtSecretKey, {
+            var token = jwt.sign({ userId: user._id }, config.jwtSecretKey, {
                 expiresIn: config.jwtExpiresIn
             });
             return res.json({ message: "User successfully login.", token: token, user: user.safeModel() });

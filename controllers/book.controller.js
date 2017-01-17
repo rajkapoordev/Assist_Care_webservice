@@ -4,6 +4,8 @@ function create(req, res, next) {
     var book = new Book();
     book.name = req.body.name;
     book.author = req.body.author;
+    book.owner = res.locals.session;
+    console.log(book);
     book.save()
         .then(function () {
             return res.json({message: "Book created."});
@@ -14,7 +16,8 @@ function create(req, res, next) {
 }
 
 function getAll(req, res, next) {
-    Book.find()
+    Book.find({}).populate('owner')
+        .exec()
         .then(function (books) {
             return res.json(books);
         })

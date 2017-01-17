@@ -17,16 +17,18 @@ mongoose.Promise = Promise;
 
 var router = express.Router();
 
-// middleware to use for api requests and verify token.
+// middleware to use for api requests and verify token by using jsonwebtoken.
 app.use('/api', function(req, res, next) {
     console.log("Inside the function");
     let token = req.headers['x-access-token'];
+   // console.log(token);
     if (token) {
         jwt.verify(token, config.jwtSecretKey, function (err, decoded) {
             if (err) {
                 res.send({ success: false, message: "Failed to authenticate token.", error: err });
             }
-            console.log(decoded);
+            console.log(decoded.userId);
+            res.locals.session = decoded.userId;
             next();
         })
     }else {

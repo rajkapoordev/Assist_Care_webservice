@@ -3,6 +3,10 @@ var Schema = mongoose.Schema;
 const _ = require("lodash");
 
 const Book = new Schema({
+    owner: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
     name: {
         type: String,
         required: true,
@@ -20,7 +24,7 @@ const Book = new Schema({
 Book.method({});
 
 Book.statics.get = function (bookId){
-    return this.findById(bookId)
+    return this.findById(bookId).populate('owner').exec()
         .then(function (book) {
             if (book) {
                 return book;
