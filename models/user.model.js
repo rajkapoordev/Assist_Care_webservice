@@ -24,6 +24,10 @@ const User = new Schema({
         type: Date,
         default: Date.now,
     },
+    books: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Book',
+    }]
 });
 
 /**
@@ -33,6 +37,16 @@ const User = new Schema({
  */
 User.statics.getByEmailId = function (emailId){
     return this.findOne({ emailId: emailId })
+        .then(function (user) {
+            if (user) {
+                return user;
+            }
+            const err = { message: "No such user exists!" };
+            return Promise.reject(err);
+        });
+};
+User.statics.getByUserId = function (userId){
+    return this.findOne({ _id: userId })
         .then(function (user) {
             if (user) {
                 return user;

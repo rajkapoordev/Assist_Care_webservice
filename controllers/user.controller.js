@@ -35,7 +35,7 @@ function create(req, res, next) {
 }
 
 function getAllUser(req, res) {
-    User.find({}, {firstName: 1, lastName: 1, emailId: 1})
+    User.find({}, { firstName: 1, lastName: 1, emailId: 1, books: 1 }).populate('books').exec()
         .then(function (users) {
             return res.json(users);
         })

@@ -9,7 +9,7 @@ const bookValidation = {
     createBook: {
         body: {
             name: Joi.string().required(),
-            author: Joi.string().required(),
+          //  author: Joi.string().required(),
         }
     },
     manageBook: {

@@ -12,7 +12,7 @@ var port = process.env.PORT || 3000; //set the port
 var mongoose   = require('mongoose');
 
 mongoose.connect('mongodb://localhost/sampleDB'); // connect to our database
-
+//mongoose.connection.db.dropDatabase();
 mongoose.Promise = Promise;
 
 var router = express.Router();
@@ -27,7 +27,7 @@ app.use('/api', function(req, res, next) {
             if (err) {
                 res.send({ success: false, message: "Failed to authenticate token.", error: err });
             }
-            console.log(decoded.userId);
+            //console.log(decoded.userId);
             res.locals.session = decoded.userId;
             next();
         })

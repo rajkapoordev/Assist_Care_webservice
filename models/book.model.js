@@ -12,8 +12,8 @@ const Book = new Schema({
         required: true,
     },
     author: {
-        type: String,
-        required: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Author'
     },
     createdOn: {
         type: Date,
@@ -23,6 +23,7 @@ const Book = new Schema({
 
 Book.method({});
 
+//get book by book Id
 Book.statics.get = function (bookId){
     return this.findById(bookId).populate('owner').exec()
         .then(function (book) {
