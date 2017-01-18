@@ -10,6 +10,9 @@ const Author = new Schema({
         type: String,
         required: true,
     },
+    profile:{
+        type: String,
+    },
     books:  [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Book',

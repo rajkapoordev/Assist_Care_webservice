@@ -11,6 +11,8 @@ function create(req, res, next) {
     author.fullName = req.body.fullName;
     author.emailId = req.body.emailId;
     author.createdBy = res.locals.session;
+    if (req.body.profile)
+        author.profile = req.body.profile;
     author.save()
         .then(function () {
             return res.json({message: "Author added."});

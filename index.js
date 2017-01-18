@@ -24,7 +24,7 @@ var router = express.Router();
 // middleware to use for api requests and verify token by using jsonwebtoken.
 app.use('/api', function(req, res, next) {
     console.log("Inside the function");
-    let token = req.headers['x-access-token'];
+    let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ODdmMjk5ZDMyZjhhNDEwZjg0NjI5OGEiLCJpYXQiOjE0ODQ3Mjg3MzMsImV4cCI6MjI0MjExMTEzM30.nhPbnJOUeGU_wSwmawCMxNFtqOURlenagKMqdhPvQnk";
    // console.log(token);
     if (token) {
         jwt.verify(token, config.jwtSecretKey, function (err, decoded) {
@@ -61,5 +61,8 @@ server.listen(app.get('port'),function(){
     console.log('Server listing at port ' + server.address().port);
 });
 
+app.get('/test', function (req, res) {
+    res.sendFile(__dirname + "/testFileUpload.html");
+});
 
 module.exports = app;
