@@ -32,7 +32,7 @@ var upload = multer({ storage: storage });
 
 router.route('/')
 
-    .post(upload.any(), authorCtrl.create)
+    .post(upload.any(), validate(authorValidation.createAuthor), authorCtrl.create)
 
     .get(authorCtrl.getAll);
 

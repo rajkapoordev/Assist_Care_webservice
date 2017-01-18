@@ -13,19 +13,22 @@ function create(req, res, next) {
     book.save()
         .then(function (book) {
             //console.log(book);
-            User.getByUserId(res.locals.session)
-                .then(function (user) {
-                    //console.log(user);
-                    user.books.push(book);
-                    user.save();
-                    //console.log(book);
-                    Author.get(mongoose.Types.ObjectId(req.body.author)).then(function (author) {
-                        //console.log(book);
-                        author.books.push(book);
-                        author.save();
-                        return res.json({message: "Book created."});
-                    })
-                })
+            return User.getByUserId(res.locals.session);
+        })
+        .then(function (user) {
+            //console.log(user);
+            user.books.push(book);
+            return user.save()
+        }).then(function (usersaved) {
+            return Author.get(mongoose.Types.ObjectId(req.body.author));
+        })
+        .then(function (author) {
+            //console.log(author);
+            author.books.push(book);
+            return author.save();
+        })
+        .then(function () {
+            return res.json({message: "Book created."});
         })
         .catch(function (err) {
             return res.send(err);

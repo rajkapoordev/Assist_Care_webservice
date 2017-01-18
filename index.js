@@ -24,7 +24,7 @@ var router = express.Router();
 // middleware to use for api requests and verify token by using jsonwebtoken.
 app.use('/api', function(req, res, next) {
     console.log("Inside the function");
-    let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ODdmMjk5ZDMyZjhhNDEwZjg0NjI5OGEiLCJpYXQiOjE0ODQ3Mjg3MzMsImV4cCI6MjI0MjExMTEzM30.nhPbnJOUeGU_wSwmawCMxNFtqOURlenagKMqdhPvQnk";
+    let token = req.headers['x-access-token'];
    // console.log(token);
     if (token) {
         jwt.verify(token, config.jwtSecretKey, function (err, decoded) {
