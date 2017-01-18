@@ -18,7 +18,8 @@ function create(req, res, next) {
             return res.json({message: "Author added."});
         })
         .catch(function (err) {
-            return res.send(err);
+            //return res.send(err);
+            return next(err);
         })
 }
 

@@ -9,6 +9,7 @@ var mongoose   = require('mongoose');
 const apiRouter = require("./routes/index.route");
 var app = express();
 var server = require("http").Server(app);
+var expressValidation = require("express-validation");
 
 // connect to our database
 mongoose.connect('mongodb://localhost/sampleDB', function () {
@@ -45,6 +46,21 @@ app.use(bodyParser.json());
 
 //all route assign here
 app.use('/',apiRouter);
+
+//Here handle an error when next with error
+app.use(function (err, req, res, next) {
+    console.log("inside next err call");
+    if (err instanceof expressValidation.ValidationError) {
+        console.log(err);
+        const errorMessage = err.errors.map(error => error.messages.join('. ')).join(' and ');
+        return res.status(err.status).json({
+            error: errorMessage
+        });
+    }else {
+        res.send(err);
+    }
+})
+
 
 //Test an api is successfully running or not
 router.get('/', function(req, res) {
