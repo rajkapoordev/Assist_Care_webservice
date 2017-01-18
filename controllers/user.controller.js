@@ -12,6 +12,7 @@ const passwordHash = require('password-hash');
  * # convert password in hash and save then create token and send to user.
  */
 function create(req, res, next) {
+    console.log("inside controller.");
     User.findOne({ emailId: req.body.emailId })
         .then(function (userFound) {
         if (userFound) {
@@ -21,10 +22,12 @@ function create(req, res, next) {
                 user.firstName = req.body.firstName;
                 user.lastName = req.body.lastName;
                 user.emailId = req.body.emailId;
-                user.password = passwordHash.generate(req.body.password);
+                //user.password = passwordHash.generate(req.body.password);
+                user.password = req.body.password;
                 return user.save()
             }
     }).then(function (savedUser) {
+        console.log(savedUser);
         var token = jwt.sign({ userId: savedUser._id }, config.jwtSecretKey, {
             expiresIn: config.jwtExpiresIn
         });
@@ -72,7 +75,7 @@ function userLogin(req, res) {
 }
 
 function remove(req, res) {
-    User.remove({_id: req.params.userId})
+    User.remove( {_id: req.params.userId} )
         .then(function () {
             return res.json({message: "successfully deleted."});
         })

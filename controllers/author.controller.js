@@ -10,6 +10,7 @@ function create(req, res, next) {
     var author = new Author();
     author.fullName = req.body.fullName;
     author.emailId = req.body.emailId;
+    author.createdBy = res.locals.session;
     author.save()
         .then(function () {
             return res.json({message: "Author added."});

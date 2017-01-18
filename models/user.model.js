@@ -1,6 +1,7 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 const _ = require("lodash");
+const passwordHash = require('password-hash');
 
 const User = new Schema({
     firstName: {
@@ -31,7 +32,14 @@ const User = new Schema({
 });
 
 /**
- *
+ * call before register the user
+ */
+User.pre('save',function (next) {
+        this.password = passwordHash.generate(this.password);
+        return next();
+});
+
+/**
  * @param emaiId
  * @returns {Promise}
  */

@@ -4,15 +4,18 @@ var morgan     = require('morgan');
 var Promise    = require('bluebird');
 var jwt = require("jsonwebtoken");
 var config = require('./config/config');
+var mongoose   = require('mongoose');
+const apiRouter = require("./routes/index.route");
 
 var app = express();
 
-var port = process.env.PORT || 3000; //set the port
+// connect to our database
+mongoose.connect('mongodb://localhost/sampleDB', function () {
+    //Drop database
+    //mongoose.connection.db.dropDatabase();
+});
 
-var mongoose   = require('mongoose');
-
-mongoose.connect('mongodb://localhost/sampleDB'); // connect to our database
-//mongoose.connection.db.dropDatabase();
+//Bluebird to mongoose
 mongoose.Promise = Promise;
 
 var router = express.Router();
@@ -39,11 +42,15 @@ app.use('/api', function(req, res, next) {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+//all route assign here
+app.use('/',apiRouter);
+
+//Test an api is successfully running or not
 router.get('/', function(req, res) {
     res.json({ message: 'hello from api test!' });
 });
 
-const apiRouter = require("./routes/index.route");
-app.use('/',apiRouter);
+//Listening port
+var port = process.env.PORT || 3000; //set the port
 
 app.listen(port);

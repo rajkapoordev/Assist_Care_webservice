@@ -10,9 +10,17 @@ const Author = new Schema({
         type: String,
         required: true,
     },
+    books:  [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Book',
+    }],
     createdOn: {
         type: Date,
         default: Date.now,
+    },
+    createdBy: {
+        type:  mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     },
 });
 
