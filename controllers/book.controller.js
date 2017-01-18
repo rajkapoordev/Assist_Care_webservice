@@ -1,12 +1,24 @@
 const Book = require("../models/book.model");
+const User = require("../models/user.model");
+const mongoose = require("mongoose");
 
+// when create a book also push to user collection
 function create(req, res, next) {
     var book = new Book();
     book.name = req.body.name;
-    book.author = req.body.author;
+    book.author = mongoose.Types.ObjectId(req.body.author);
+    book.owner = res.locals.session;
     book.save()
-        .then(function () {
-            return res.json({message: "Book created."});
+        .then(function (book) {
+            //console.log(book);
+            User.getByUserId(res.locals.session)
+                .then(function (user) {
+                    //console.log(user);
+                    user.books.push(book);
+                    user.save();
+                    console.log(user);
+                    return res.json({message: "Book created."});
+                })
         })
         .catch(function (err) {
             return res.send(err);
@@ -14,7 +26,8 @@ function create(req, res, next) {
 }
 
 function getAll(req, res, next) {
-    Book.find()
+    Book.find({}).populate('owner')
+        .exec()
         .then(function (books) {
             return res.json(books);
         })

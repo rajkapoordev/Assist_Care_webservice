@@ -12,13 +12,25 @@ const userValidation = {
             emailId: Joi.string().email().required(),
             password: Joi.string().required(),
         }
+    },
+    userLogin: {
+        body: {
+            emailId: Joi.string().email().required(),
+            password: Joi.string().required(),
+        }
     }
 };
 
-router.route('/registeruser')
+router.route('/register')
 
     .post(validate(userValidation.registerUser),userCtrl.create)
 
     .get(userCtrl.getAllUser);
 
+router.route('/login')
+
+    .post(validate(userValidation.userLogin),userCtrl.userLogin);
+
+router.route('/user/:userId')
+    .delete(userCtrl.remove);
 module.exports = router;
