@@ -18,7 +18,7 @@ function create(req, res, next) {
                     //console.log(user);
                     user.books.push(book);
                     user.save();
-                    console.log(book);
+                    //console.log(book);
                     Author.get(mongoose.Types.ObjectId(req.body.author)).then(function (author) {
                         //console.log(book);
                         author.books.push(book);
@@ -34,7 +34,7 @@ function create(req, res, next) {
 
 //Here populate the book details with by whome added and book author details as well
 function getAll(req, res, next) {
-    Book.find({}).populate('owner').populate('author')
+    Book.find({}).populate('owner').populate('author').sort({ createdOn: -1 })
         .exec()
         .then(function (books) {
             return res.json(books);

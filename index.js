@@ -2,12 +2,13 @@ var express    = require('express');
 var bodyParser = require('body-parser');
 var morgan     = require('morgan');
 var Promise    = require('bluebird');
+var path = require('path');
 var jwt = require("jsonwebtoken");
 var config = require('./config/config');
 var mongoose   = require('mongoose');
 const apiRouter = require("./routes/index.route");
-
 var app = express();
+var server = require("http").Server(app);
 
 // connect to our database
 mongoose.connect('mongodb://localhost/sampleDB', function () {
@@ -50,7 +51,15 @@ router.get('/', function(req, res) {
     res.json({ message: 'hello from api test!' });
 });
 
-//Listening port
-var port = process.env.PORT || 3000; //set the port
+app.use('/',router);
 
-app.listen(port);
+//Listening port
+app.set('port',process.env.PORT || config.webPort);
+app.use(express.static(path.join(__dirname,'public')));
+
+server.listen(app.get('port'),function(){
+    console.log('Server listing at port ' + server.address().port);
+});
+
+
+module.exports = app;

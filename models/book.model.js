@@ -26,10 +26,10 @@ const Book = new Schema({
 });
 
 // Pre save the book
-Book.pre('save', function(next) {
-    console.log("call pre save book");
-    return next();
-});
+// Book.pre('save', function(next) {
+//     console.log("call pre save book");
+//     return next();
+// });
 
 Book.method({});
 

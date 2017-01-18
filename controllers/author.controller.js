@@ -21,7 +21,7 @@ function create(req, res, next) {
 }
 
 function getAll(req, res, next) {
-    Author.find()
+    Author.find().sort({ createdOn: -1 })
         .then(function (author) {
             return res.json(author);
         })
