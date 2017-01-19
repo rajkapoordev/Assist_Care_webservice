@@ -33,6 +33,12 @@ function getAll(req, res, next) {
         })
 }
 
+/**
+ *
+ * @param req authorId
+ * @param res author detail or error if not found
+ * @param next if any error
+ */
 function getById(req, res, next) {
     Author.get(req.params.authorId)
         .then(function (author) {
@@ -42,6 +48,11 @@ function getById(req, res, next) {
     })
 }
 
+/**
+ *
+ * @param req authorId
+ * @param res author detail or error
+ */
 function remove(req, res) {
     Author.remove({_id: req.params.authorId})
         .then(function (author) {

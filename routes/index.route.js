@@ -13,4 +13,9 @@ router.use('/auth', userRoute);
 //author routes
 router.use('/api/authors', authorRoute);
 
+//Test the server
+router.get('/', function(req, res) {
+    res.json({ message: 'hello from api test!' });
+});
+
 module.exports = router;
