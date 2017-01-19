@@ -1,8 +1,8 @@
 const Author = require("../models/author.model");
-
+const APIError = require("../helpers/APIError");
 /**
  *
- * @param { fullname, emailId}
+ * @param { fullname, emailId }
  * @param res
  *
  */
@@ -74,6 +74,20 @@ function remove(req, res, next) {
  * @param next if error
  */
 function update(req, res, next) {
-    //Author.get()
+    Author.getByAuthorId(req.params.authorId)
+        .then(function (author) {
+            author.fullName = req.body.fullName || author.fullName;
+            author.emailId = req.body.emailId || author.emailId;
+            author.gender = req.body.gender || author.gender;
+            return author.save()
+        })
+        .then(function (author) {
+            console.log(author);
+            return res.json({message: "author successfully updated."});
+        })
+        .catch(function (err){
+            return next(err);
+        })
 }
-module.exports = { create, getAll, getById, remove };
+
+module.exports = { create, getAll, getById, remove, update };

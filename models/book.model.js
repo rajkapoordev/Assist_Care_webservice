@@ -2,6 +2,8 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 const _ = require("lodash");
 const boom = require("boom");
+const APIError = require("./../helpers/APIError");
+const httpStatus = require('http-status');
 
 const Book = new Schema({
     owner: {
@@ -43,7 +45,8 @@ Book.statics.getByBookId = function (bookId) {
             if (book) {
                 return book;
             }
-            const err = boom.notFound("Book not found");
+            const err = new APIError('Book not found"', httpStatus.NOT_FOUND);
+            //const err = boom.notFound("Book not found");
             return Promise.reject(err);
         });
 };

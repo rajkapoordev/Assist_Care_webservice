@@ -2,9 +2,11 @@ var express    = require('express');
 var bodyParser = require('body-parser');
 var path = require('path');
 var config = require('./config');
-const apiRouter = require("./../routes/index.route");
+const apiRouter = require("../routes/index.route");
 var jwt = require("jsonwebtoken");
 var expressValidation = require("express-validation");
+const APIError = require("../helpers/APIError");
+const httpStatus = require('http-status');
 
 //Here configure the express
 var app = express();
@@ -44,14 +46,18 @@ app.use(function (err, req, res, next) {
         return res.status(err.status).json({
             error: errorMessage
         });
-    }else {
-        console.log("Inside else");
+    }else if (err instanceof APIError) {
         console.log(err);
-        res.send(err);
+        return res.status(err.status || httpStatus.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            error: err.message
+        });
+    } else{
+        next(err);
     }
 })
 
-// if 404 then send message
+// if api not found then send message
 app.use(function (req, res, next) {
     console.log("inside not found");
     return res.status(404).json({ success: false, message: 'API not found.' });

@@ -40,6 +40,8 @@ router.route('/:authorId')
 
     .get(authorCtrl.getById)
 
-    .delete(authorCtrl.remove);
+    .delete(authorCtrl.remove)
+
+    .put(authorCtrl.update);
 
 module.exports = router;

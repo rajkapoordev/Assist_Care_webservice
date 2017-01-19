@@ -1,6 +1,8 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 var boom = require("boom");
+const APIError = require("./../helpers/APIError");
+const httpStatus = require('http-status');
 
 const Author = new Schema({
     fullName: {
@@ -41,7 +43,8 @@ Author.statics.getByAuthorId = function (authorId){
             if (author) {
                 return author;
             }
-            const err = boom.notFound("No such author exists!");
+            // const err = boom.notFound("No such author exists!");
+            const err = new APIError('No such author exists!', httpStatus.NOT_FOUND);
             return Promise.reject(err);
         });
 };

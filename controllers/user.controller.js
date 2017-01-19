@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 const config = require('../config/config');
 const passwordHash = require('password-hash');
 const boom = require('boom');
+const APIError = require("./../helpers/APIError");
+const httpStatus = require('http-status');
 /**
  *
  * @param { firstName, lastname, emailId, password }
@@ -16,7 +18,9 @@ function create(req, res, next) {
     User.findOne({ emailId: req.body.emailId })
         .then(function (userFound) {
         if (userFound) {
-                return Promise.reject({ message: "Email Id already exists, please  use another." });
+                //409 status code for conflict
+                const err = new APIError("Email Id already exists, please  use another." , httpStatus.CONFLICT);
+                return Promise.reject(err);
             }else {
                 var user = new User();
                 user.firstName = req.body.firstName;
@@ -67,7 +71,8 @@ function userLogin(req, res, next) {
                 return res.json({ message: "User successfully login.", token: token, user: user.safeModel() });
             }else {
                 console.log("Invalid password");
-                const err = boom.unauthorized("Invalid password, please try again.");
+                const err = new APIError("Invalid password, please try again.", httpStatus.UNAUTHORIZED);
+                // const err = boom.unauthorized("Invalid password, please try again.");
                 return Promise.reject(err);
             }
     }).catch(function (err) {
@@ -93,4 +98,29 @@ function remove(req, res, next) {
         })
 }
 
-module.exports = {create, getAllUser, userLogin, remove};
+/**
+ *
+ * @param req oldPassword, newPassword
+ * @param res changed
+ * @param next error
+ */
+function changePassword(req, res, next) {
+    User.getByUserId(res.locals.session)
+        .then(function (user) {
+            if(passwordHash.verify(req.body.oldPassword, user.password)) {
+                user.password = req.body.newPassword;
+                return user.save()
+            }else {
+                const err = new APIError("Fail to change your password, please check your current password.", httpStatus.UNAUTHORIZED);
+                // const err = boom.unauthorized("Fail to change your password, please check your current password.");
+                return Promise.reject(err);
+            }
+        }).then(function (user) {
+            return res.json({ message: "Password successfully changed." });
+        })
+        .catch(function (err) {
+            return next(err);
+    });
+}
+
+module.exports = {create, getAllUser, userLogin, remove, changePassword};

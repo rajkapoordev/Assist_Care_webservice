@@ -16,6 +16,7 @@
     "express-jwt": "^5.1.0",
     "express-validation": "^1.0.1",
     "http": "0.0.0",
+    "http-status": "^0.2.5",
     "joi": "^10.2.0",
     "jsonwebtoken": "^7.2.1",
     "lodash": "^4.17.4",
