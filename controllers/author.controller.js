@@ -10,17 +10,21 @@ function create(req, res, next) {
     var author = new Author();
     author.fullName = req.body.fullName;
     author.emailId = req.body.emailId;
+    author.createdBy = res.locals.session;
+    if (req.body.profile)
+        author.profile = req.body.profile;
     author.save()
         .then(function () {
             return res.json({message: "Author added."});
         })
         .catch(function (err) {
-            return res.send(err);
+            //return res.send(err);
+            return next(err);
         })
 }
 
 function getAll(req, res, next) {
-    Author.find()
+    Author.find().sort({ createdOn: -1 })
         .then(function (author) {
             return res.json(author);
         })
