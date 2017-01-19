@@ -2,7 +2,7 @@ const User = require("../models/user.model");
 const jwt = require('jsonwebtoken');
 const config = require('../config/config');
 const passwordHash = require('password-hash');
-
+const boom = require('boom');
 /**
  *
  * @param { firstName, lastname, emailId, password }
@@ -67,9 +67,7 @@ function userLogin(req, res, next) {
                 return res.json({ message: "User successfully login.", token: token, user: user.safeModel() });
             }else {
                 console.log("Invalid password");
-                const err = {
-                    message: "Invalid password, please try again.",
-                };
+                const err = boom.unauthorized("Invalid password, please try again.");
                 return Promise.reject(err);
             }
     }).catch(function (err) {

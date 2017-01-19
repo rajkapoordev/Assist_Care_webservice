@@ -2,6 +2,7 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 const _ = require("lodash");
 const passwordHash = require('password-hash');
+const boom = require("boom");
 
 const User = new Schema({
     firstName: {
@@ -52,7 +53,7 @@ User.statics.getByEmailId = function (emailId) {
             if (user) {
                 return user;
             }
-            const err = { message: "No such user exists!" };
+            const err = boom.notFound("No such user exists, please check emailId");
             return Promise.reject(err);
         });
 };
@@ -63,7 +64,7 @@ User.statics.getByUserId = function (userId){
             if (user) {
                 return user;
             }
-            const err = { message: "No such user exists!" };
+            const err = boom.notFound("No such user exists!");
             return Promise.reject(err);
         });
 };

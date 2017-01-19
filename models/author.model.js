@@ -1,5 +1,6 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
+var boom = require("boom");
 
 const Author = new Schema({
     fullName: {
@@ -40,7 +41,7 @@ Author.statics.getByAuthorId = function (authorId){
             if (author) {
                 return author;
             }
-            const err = { message: "No such author exists!" };
+            const err = boom.notFound("No such author exists!");
             return Promise.reject(err);
         });
 };

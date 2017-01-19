@@ -1,6 +1,7 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 const _ = require("lodash");
+const boom = require("boom");
 
 const Book = new Schema({
     owner: {
@@ -42,7 +43,7 @@ Book.statics.getByBookId = function (bookId) {
             if (book) {
                 return book;
             }
-            const err = { message: "Book not found" };
+            const err = boom.notFound("Book not found");
             return Promise.reject(err);
         });
 };

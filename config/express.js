@@ -45,9 +45,18 @@ app.use(function (err, req, res, next) {
             error: errorMessage
         });
     }else {
+        console.log("Inside else");
+        console.log(err);
         res.send(err);
     }
 })
+
+// if 404 then send message
+app.use(function (req, res, next) {
+    console.log("inside not found");
+    return res.status(404).json({ success: false, message: 'API not found.' });
+})
+
 
 //Listening port
 app.set('port',process.env.PORT || config.webPort);
