@@ -107,4 +107,38 @@ function remove(req, res, next) {
         })
 }
 
-module.exports = { create, getAll, update, getById, remove };
+/**
+ *
+ * @param req -> any string or character
+ * @param res -> matching data
+ * @param next -> error
+ */
+function findByMatchingString(req, res, next) {
+    // Option i for ignore case
+    Book.find({ "name": { "$regex": req.params.str, "$options": "i" }})
+    //Book.find().where('name').equals(req.params.str)
+        .then(function (books) {
+            return res.send(books);
+        })
+        .catch(function (e){
+            return next(e);
+        })
+}
+
+/**
+ *
+ * @param req -> book name
+ * @param res -> matching books
+ * @param next -> error
+ */
+function findByName(req, res, next) {
+    Book.find().where('name').equals(req.params.str)
+        .then(function (books) {
+            return res.send(books);
+        })
+        .catch(function (e){
+            return next(e);
+        })
+}
+
+module.exports = { create, getAll, update, getById, remove, findByMatchingString, findByName};

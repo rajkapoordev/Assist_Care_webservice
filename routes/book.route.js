@@ -37,4 +37,12 @@ router.route('/:bookId')
 
     .delete(bookCtrl.remove);
 
+router.route('/getByString/:str')
+
+    .get(bookCtrl.findByMatchingString);
+
+router.route('/getByName/:str')
+
+    .get(bookCtrl.findByName);
+
 module.exports = router;
