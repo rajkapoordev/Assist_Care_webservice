@@ -33,17 +33,19 @@ function create(req, res, next) {
         });
         return res.json({ message: "User successfully registered.", token: token });
     }).catch(function (err) {
-        return res.send(err);
+        return next(err);
     })
 }
 
-function getAllUser(req, res) {
-    User.find({}, { firstName: 1, lastName: 1, emailId: 1, books: 1 }).populate('books').exec()
+// Get all users
+function getAllUser(req, res, next) {
+    User.find({}, { firstName: 1, lastName: 1, emailId: 1, books: 1 })
+        .populate('books').sort({ createdOn: -1 }).exec()
         .then(function (users) {
             return res.json(users);
         })
         .catch(function (err) {
-            return res.send(err);
+            return next(err);
         })
 }
 
@@ -54,33 +56,42 @@ function getAllUser(req, res) {
  * #if login successfull create token and send it
  * }
  */
-function userLogin(req, res) {
-    User.getByEmailId(req.body.emailId).then(function (user) {
-        if(passwordHash.verify(req.body.password, user.password)) {
-            console.log("valid password");
-            var token = jwt.sign({ userId: user._id }, config.jwtSecretKey, {
-                expiresIn: config.jwtExpiresIn
-            });
-            return res.json({ message: "User successfully login.", token: token, user: user.safeModel() });
-        }else {
-            console.log("Invalid password");
-            const err = {
-                message: "Invalid password, please try again.",
-            };
-            return res.json(err);
-        }
+function userLogin(req, res, next) {
+    User.getByEmailId(req.body.emailId)
+        .then(function (user) {
+            if(passwordHash.verify(req.body.password, user.password)) {
+                console.log("valid password");
+                var token = jwt.sign({ userId: user._id }, config.jwtSecretKey, {
+                    expiresIn: config.jwtExpiresIn
+                });
+                return res.json({ message: "User successfully login.", token: token, user: user.safeModel() });
+            }else {
+                console.log("Invalid password");
+                const err = {
+                    message: "Invalid password, please try again.",
+                };
+                return Promise.reject(err);
+            }
     }).catch(function (err) {
-        return res.send(err);
+        return next(err);
     });
 }
 
-function remove(req, res) {
-    User.remove( {_id: req.params.userId} )
+/**
+ *
+ * @param req UserId
+ * @param res message or error
+ */
+function remove(req, res, next) {
+    User.getByUserId(req.param.userId)
+        .then(function (user) {
+            User.remove({ _id: user._id })
+        })
         .then(function () {
             return res.json({message: "successfully deleted."});
         })
         .catch(function (err){
-            return res.send(err);
+            return next(err);
         })
 }
 

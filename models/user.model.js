@@ -7,14 +7,17 @@ const User = new Schema({
     firstName: {
         type: String,
         required: true,
+        trim: true,
     },
     lastName: {
         type: String,
-        required: true,
+        default: '',
+        trim: true,
     },
     emailId: {
         type: String,
         required: true,
+        trim: true,
         unique: true
     },
     password: {
@@ -43,7 +46,7 @@ User.pre('save',function (next) {
  * @param emaiId
  * @returns {Promise}
  */
-User.statics.getByEmailId = function (emailId){
+User.statics.getByEmailId = function (emailId) {
     return this.findOne({ emailId: emailId })
         .then(function (user) {
             if (user) {
@@ -53,8 +56,9 @@ User.statics.getByEmailId = function (emailId){
             return Promise.reject(err);
         });
 };
+
 User.statics.getByUserId = function (userId){
-    return this.findOne({ _id: userId })
+    return this.findById({ _id: userId })
         .then(function (user) {
             if (user) {
                 return user;

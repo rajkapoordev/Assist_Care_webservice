@@ -10,6 +10,7 @@ function create(req, res, next) {
     var author = new Author();
     author.fullName = req.body.fullName;
     author.emailId = req.body.emailId;
+    author.gender = req.body.gender;
     author.createdBy = res.locals.session;
     if (req.body.profile)
         author.profile = req.body.profile;
@@ -29,7 +30,7 @@ function getAll(req, res, next) {
             return res.json(author);
         })
         .catch(function (err) {
-            return res.send(err);
+            return next(err);
         })
 }
 
@@ -40,11 +41,11 @@ function getAll(req, res, next) {
  * @param next if any error
  */
 function getById(req, res, next) {
-    Author.get(req.params.authorId)
+    Author.getByAuthorId(req.params.authorId)
         .then(function (author) {
             return res.json(author);
         }).catch(function (err) {
-        return res.send(err);
+        return next(err);
     })
 }
 
@@ -53,14 +54,26 @@ function getById(req, res, next) {
  * @param req authorId
  * @param res author detail or error
  */
-function remove(req, res) {
-    Author.remove({_id: req.params.authorId})
+function remove(req, res, next) {
+    Author.getByAuthorId(req.params.authorId)
+        .then(function (author) {
+            Author.remove({ _id: author._id })
+        })
         .then(function (author) {
             return res.json({message: "author successfully deleted."});
         })
         .catch(function (err){
-            return res.send(err);
+            return next(err);
         })
 }
 
+/**
+ *
+ * @param req authorId and authordetails to update
+ * @param res updated message
+ * @param next if error
+ */
+function update(req, res, next) {
+    //Author.get()
+}
 module.exports = { create, getAll, getById, remove };

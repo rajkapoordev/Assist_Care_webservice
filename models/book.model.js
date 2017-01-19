@@ -31,10 +31,12 @@ const Book = new Schema({
 //     return next();
 // });
 
-Book.method({});
+Book.method({
+
+});
 
 //get book by book Id
-Book.statics.get = function (bookId) {
+Book.statics.getByBookId = function (bookId) {
     return this.findById(bookId).populate('owner').exec()
         .then(function (book) {
             if (book) {

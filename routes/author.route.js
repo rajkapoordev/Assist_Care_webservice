@@ -10,7 +10,7 @@ const authorValidation = {
     createAuthor: {
         body: {
             fullName: Joi.string().required(),
-            emailId: Joi.string().required(),
+            emailId: Joi.string().email().required(),
         }
     }
 };

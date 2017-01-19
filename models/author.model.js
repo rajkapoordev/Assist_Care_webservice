@@ -5,15 +5,21 @@ const Author = new Schema({
     fullName: {
         type: String,
         required: true,
+        trim: true,
     },
     emailId: {
         type: String,
         required: true,
+        trim: true,
     },
-    profile:{
+    profile: {
         type: String,
     },
-    books:  [{
+    gender: {
+        type: String,
+        enum: ['Female', 'Male'],
+    },
+    books: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Book',
     }],
@@ -27,20 +33,10 @@ const Author = new Schema({
     },
 });
 
-Author.statics.get = function (authorId){
-    return this.findById(authorId)
-        .then(function (author) {
-            if (author) {
-                return author;
-            }
-            const err = "Author not found";
-            return Promise.reject(err);
-        });
-};
-
+//Static method to find author by id
 Author.statics.getByAuthorId = function (authorId){
     return this.findOne({ _id: authorId })
-        .then(function (authorId) {
+        .then(function (author) {
             if (author) {
                 return author;
             }

@@ -33,7 +33,7 @@ router.route('/:bookId')
 
     .get(bookCtrl.getById)
 
-    .put(validate(bookValidation.manageBook),bookCtrl.update)
+    .put(bookCtrl.update)
 
     .delete(bookCtrl.remove);
 
