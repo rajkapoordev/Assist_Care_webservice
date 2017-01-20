@@ -18,6 +18,11 @@ const userValidation = {
             emailId: Joi.string().email().required(),
             password: Joi.string().required(),
         }
+    },
+    updateUser: {
+        params:{
+            userId: Joi.string().required(),
+        }
     }
 };
 
@@ -32,5 +37,7 @@ router.route('/login')
     .post(validate(userValidation.userLogin),userCtrl.userLogin);
 
 router.route('/user/:userId')
+
     .delete(userCtrl.remove);
+
 module.exports = router;

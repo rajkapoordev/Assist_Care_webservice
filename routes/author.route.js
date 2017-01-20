@@ -10,7 +10,7 @@ const authorValidation = {
     createAuthor: {
         body: {
             fullName: Joi.string().required(),
-            emailId: Joi.string().required(),
+            emailId: Joi.string().email().required(),
         }
     }
 };
@@ -40,6 +40,8 @@ router.route('/:authorId')
 
     .get(authorCtrl.getById)
 
-    .delete(authorCtrl.remove);
+    .delete(authorCtrl.remove)
+
+    .put(authorCtrl.update);
 
 module.exports = router;

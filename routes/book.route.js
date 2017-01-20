@@ -33,8 +33,16 @@ router.route('/:bookId')
 
     .get(bookCtrl.getById)
 
-    .put(validate(bookValidation.manageBook),bookCtrl.update)
+    .put(bookCtrl.update)
 
     .delete(bookCtrl.remove);
+
+router.route('/getByString/:str')
+
+    .get(bookCtrl.findByMatchingString);
+
+router.route('/getByName/:str')
+
+    .get(bookCtrl.findByName);
 
 module.exports = router;

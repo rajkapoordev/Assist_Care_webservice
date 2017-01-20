@@ -2,19 +2,25 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 const _ = require("lodash");
 const passwordHash = require('password-hash');
+const boom = require("boom");
+const APIError = require("./../helpers/APIError");
+const httpStatus = require('http-status');
 
 const User = new Schema({
     firstName: {
         type: String,
         required: true,
+        trim: true,
     },
     lastName: {
         type: String,
-        required: true,
+        default: '',
+        trim: true,
     },
     emailId: {
         type: String,
         required: true,
+        trim: true,
         unique: true
     },
     password: {
@@ -43,23 +49,26 @@ User.pre('save',function (next) {
  * @param emaiId
  * @returns {Promise}
  */
-User.statics.getByEmailId = function (emailId){
+User.statics.getByEmailId = function (emailId) {
     return this.findOne({ emailId: emailId })
         .then(function (user) {
             if (user) {
                 return user;
             }
-            const err = { message: "No such user exists!" };
+            // const err = boom.notFound("No such user exists, please check emailId");
+            const err = new APIError('No such user exists, please check emailId"', httpStatus.NOT_FOUND);
             return Promise.reject(err);
         });
 };
+
 User.statics.getByUserId = function (userId){
-    return this.findOne({ _id: userId })
+    return this.findById({ _id: userId })
         .then(function (user) {
             if (user) {
                 return user;
             }
-            const err = { message: "No such user exists!" };
+            // const err = boom.notFound("No such user exists!");
+            const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
             return Promise.reject(err);
         });
 };
