@@ -13,8 +13,11 @@ function create(req, res, next) {
         })
 }
 
+/*
+Populate products when get category
+ */
 function getAll(req, res, next) {
-    Category.find()
+    Category.find().populate('products').exec()
         .then(function (category) {
             return res.send(category);
         })

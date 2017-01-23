@@ -1,5 +1,6 @@
 var Product = require('./../models/product.model');
 var mongoose = require('mongoose');
+var Category = require('./../models/category.model');
 
 function create(req, res, next) {
     var product = new Product();
@@ -9,15 +10,25 @@ function create(req, res, next) {
     product.category = mongoose.Types.ObjectId(req.body.category);
     product.save()
         .then(function (product) {
-            res.send(product);
+            return res.send(product);
+        })
+        .then(function (product) {
+            return Category.getCategoryById(mongoose.Types.ObjectId(req.body.category));
+        })
+        .then(function (category) {
+            category.products.push(product);
+            return category.save()
+        })
+        .then(function () {
+            return res.send({ message : "Successfully added."});
         })
         .catch(function (err) {
-            res.send(err);
+            return next(err);
         })
 }
 
 function getAll(req, res, next) {
-    Product.find()
+    Product.find().populate('category').exec()
         .then(function (product) {
             return res.send(product);
         })

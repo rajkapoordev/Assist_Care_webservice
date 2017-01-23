@@ -15,7 +15,11 @@ var Category = new Schema({
     createdOn: {
         type: Date,
         detault: Date.now,
-    }
+    },
+    products: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product'
+    }]
 
 });
 
