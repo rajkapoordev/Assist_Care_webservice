@@ -1,7 +1,6 @@
 var morgan = require('morgan');
 var Promise = require('bluebird');
 var mongoose = require('mongoose');
-
 //All express config done in express.js
 var app = require("./config/express");
 

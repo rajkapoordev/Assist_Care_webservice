@@ -11,11 +11,17 @@ router.route('/')
     .get(categoryCtrl.getAll);
 
 
+router.route('/getByPage/:pageNo')
+    .get(categoryCtrl.getByPageNo);
+
 router.route('/uniqueCategory')
     .get(categoryCtrl.getUniqueCategory)
 
 router.route('/:categoryId')
     .get(categoryCtrl.getById);
+
+
+
 
 module.exports = router;
 

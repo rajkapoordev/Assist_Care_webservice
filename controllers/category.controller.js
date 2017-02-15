@@ -36,6 +36,30 @@ function getById(req, res, next) {
         })
 }
 
+function getByPageNo(req, res, next) {
+    let perpage = 10;
+    let pageNo = parseInt(req.params.pageNo) || 0;
+    let total = 0;
+    let totalpage = 0;
+    Category.find()//.skip(2).limit(5)
+        .then(function (category) {
+            console.log("******************");
+            total = category.length;
+            console.log(total);
+            console.log("******************");
+            console.log(Math.ceil(total/perpage));
+            totalpage = Math.ceil(total/perpage);
+            return Category.find().skip(pageNo*perpage).limit(perpage);
+        })
+        .then(function (category) {
+            let data = { pageNo: pageNo, totalPage: totalpage, category: category};
+            return res.send(data);
+        })
+        .catch(function (err) {
+            return next(err);
+        })
+}
+
 /**
  *
  * @param req
@@ -54,4 +78,4 @@ function getUniqueCategory(req, res, next) {
         })
 }
 
-module.exports = { create, getAll, getById, getUniqueCategory };
+module.exports = { create, getAll, getById, getUniqueCategory, getByPageNo };
